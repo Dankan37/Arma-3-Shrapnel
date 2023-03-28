@@ -19,6 +19,7 @@ class CfgFunctions
             class initializeShell {};
             class createShrapnel {};
             class ShrapnelAtPos {};
+            class handleShrapnel {};
 		};
 	};
 };
@@ -80,14 +81,14 @@ class cfgMagazines {
     class 6Rnd_82mm_Mo_SHRP_shells: 8Rnd_82mm_Mo_shells {
         ammo = "Sh_SHRP_82mm_AMOS";
         count = 6;
-        displayName = "Airbust Mortar Shells";
+        displayName = "Airburst Mortar Shells";
         displayNameShort = "Shrapnel";
     };
 
     class 12Rnd_155mm_Mo_SHRP_shells: 32Rnd_155mm_Mo_shells {
         ammo = "Sh_SHRP_155mm_AMOS";
         count = 12;
-        displayName = "Airbust Shells";
+        displayName = "Airburst Shells";
         displayNameShort = "Shrapnel";
     };
 
@@ -100,8 +101,8 @@ class cfgMagazines {
     class 1Rnd_SHRP_Grenade_shell: 1Rnd_HE_Grenade_shell {
         author = "Dankan37";
         ammo = "G_40mm_SHRP";
-        displayName = "40 mm Airbust Grenade Round";
-        displayNameShort = "Airbust Grenade";
+        displayName = "40 mm Airburst Grenade Round";
+        displayNameShort = "Airburst Grenade";
     };
 };
 
@@ -126,7 +127,7 @@ class cfgWeapons {
 		class EventHandlers
 		{
             class SHRP {
-				fired = "if(_this # 5 == '1Rnd_SHRP_Grenade_shell') then {[_this # 6] call SHRP37_fnc_initializeShell;};";
+				fired = "_this call SHRP37_fnc_handleShrapnel";
 			};
 		};
 	};
@@ -144,8 +145,8 @@ class cfgWeapons {
             class EventHandlers
             {
                 class SHRP {
-                    fired = "if(_this # 5 == '1Rnd_SHRP_Grenade_shell') then {[_this # 6] call SHRP37_fnc_initializeShell;};";
-                };
+				    fired = "_this call SHRP37_fnc_handleShrapnel";
+			    };
             };
         };        
     };
@@ -171,12 +172,13 @@ class cfgVehicles {
 
         class EventHandlers: EventHandlers {
 			class SHRP {
-				fired = "if(_this # 5 == '6Rnd_82mm_Mo_SHRP_shells') then {[_this # 6] call SHRP37_fnc_initializeShell;};";
+				fired = "_this call SHRP37_fnc_handleShrapnel";
 			};
 		};
     };
 
-    class MBT_01_base_F: LandVehicle {
+    class Tank_F: LandVehicle {};
+    class MBT_01_base_F: Tank_F {
         class Turrets {
             class MainTurret;
         };
@@ -191,7 +193,27 @@ class cfgVehicles {
 
         class EventHandlers: EventHandlers {
 			class SHRP {
-				fired = "if(_this # 5 == '12Rnd_155mm_Mo_SHRP_shells') then {[_this # 6] call SHRP37_fnc_initializeShell;};";
+			    fired = "_this call SHRP37_fnc_handleShrapnel";
+			};
+		};
+    };
+
+    class MBT_02_base_F: Tank_F {
+        class Turrets {
+            class MainTurret;
+        };
+        class EventHandlers;
+    };
+    class MBT_02_arty_base_F : MBT_02_base_F {
+        class Turrets: Turrets { 
+            class MainTurret: MainTurret {
+                magazines[] += {"12Rnd_155mm_Mo_SHRP_shells"};
+            };
+        };
+
+        class EventHandlers: EventHandlers {
+			class SHRP {
+			    fired = "_this call SHRP37_fnc_handleShrapnel";
 			};
 		};
     };
@@ -212,7 +234,7 @@ class cfgVehicles {
         class EventHandlers
 		{
 			class SHRP {
-				fired = "if(_this # 5 == '12Rnd_230mm_rockets_SHRP') then {[_this # 6] call SHRP37_fnc_initializeShell;};";
+			    fired = "_this call SHRP37_fnc_handleShrapnel";
 			};
 		};
     };
