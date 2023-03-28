@@ -1,0 +1,15 @@
+{
+    "compress": {
+        "exclude": [
+        ],
+        "include": [
+            "\\.sqf$"
+        ]
+    },
+    "headers": [
+        {
+            "name": "prefix",
+            "value": "SHRP_main"
+        }
+    ]
+}
