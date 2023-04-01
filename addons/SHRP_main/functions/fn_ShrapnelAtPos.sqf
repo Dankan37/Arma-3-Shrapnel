@@ -3,7 +3,7 @@ _pos = param [0];
 _shell = param[1, "Sh_SHRP_82mm_AMOS"];
 _shellParams = param[2, []];
 
-_shell = "Sh_SHRP_82mm_AMOS" createVehicle _pos;
+_shell = _shell createVehicle _pos;
 
 if(count _shellParams == 0) then {
 	_shellParams = getArray (configOf _shell >> "SHRP_shellParam");

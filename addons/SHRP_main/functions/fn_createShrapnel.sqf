@@ -15,22 +15,17 @@ deleteVehicle _shell;
 
 //Mine explosion 
 _exp = createMine [_explosive, _pos, [], 0];
-_exp setPosASL _pos;
+//_exp setPosASL _pos;
 _exp setDamage 1;
 
-//_posT = ASLToAGL _pos;
-//_pos = ASLToAGL _pos;
 _entities = _pos nearEntities _radius;
-
 _maxDeviation = _velocity * sin(_deviation);
 _maxDeviationHalf = _maxDeviation/2;
 
 {
+	if(!alive _x) then {continue};
 	_posTgt = position _x;
-	//_posTgt = ASLtoAGL _posTgt;
 	_relVersor = vectorNormalized (_pos vectorFromTo _posTgt);
-
-	//_count = if(_x isKindOf "LandVehicle") then [{25}, {8}];
 	for "_i" from 0 to _frags do {
 		_ammo = _type createVehicle _pos;
 		_v =  _relVersor vectorMultiply _velocity;
@@ -40,22 +35,23 @@ _maxDeviationHalf = _maxDeviation/2;
 	};
 }forEach _entities;
 
-
-_N = _frags;
-for "_i" from 0 to _N do {
+_verticalAngle = 90 / _levels;
+_N = (_frags * 2) max 20;
+for "_i" from 1 to _N do {
 	_startAngle = random 360;
 	_t = 360/_N;
 	_angle = _t * _i + _startAngle;
 	_tSin = sin(_angle);
 	_tCos = cos(_angle);
 	
-	for "_j" from 0 to _levels do {
+	for "_j" from 1 to _levels do {
+		_verticalSpeed = -_velocity * sin(_verticalAngle * _j);
 		_pickedRandom = random [-_maxDeviation, -_maxDeviationHalf , _maxDeviationHalf];
 		_tempVal = _pickedRandom + _velocity;
 		_ammo = _type createVehicle _pos;
 		_vx = _tempVal * _tCos;
 		_vy = _tempVal * _tSin;
-		_vz = -100 * _j + _pickedRandom;
+		_vz = _verticalSpeed + _pickedRandom;
 		_v = [_vx, _vy, _vz];
 		_ammo setVelocity _v;
 
